@@ -1,0 +1,105 @@
+/* Estilos generales */
+.container-fluid {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  /* Calendario */
+  #calendario {
+    background-color: #fff;
+  }
+  
+  .fc-event {
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .fc-day-today {
+    background-color: rgba(241, 194, 50, 0.1) !important;
+  }
+  
+  /* Tarjetas */
+  .card {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    border-radius: 0.5rem;
+    border: none;
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-header {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+    font-weight: 500;
+  }
+  
+  /* Botones */
+  .btn {
+    border-radius: 0.35rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+  }
+  
+  .btn-primary {
+    background-color: #4a6cbd;
+    border-color: #4a6cbd;
+  }
+  
+  .btn-primary:hover {
+    background-color: #3b559d;
+    border-color: #3b559d;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+  }
+  
+  /* Formularios */
+  .form-control, .form-select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.35rem;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #4a6cbd;
+    box-shadow: 0 0 0 0.2rem rgba(74, 108, 189, 0.25);
+  }
+  
+  /* Colores para las salas */
+  .sala-amarilla {
+    background-color: #f1c232 !important;
+    border-color: #f1c232 !important;
+  }
+  
+  .sala-morada {
+    background-color: #9900ff !important;
+    border-color: #9900ff !important;
+  }
+  
+  /* Mensajes del sistema */
+  #mensajesSistema {
+    position: relative;
+    z-index: 1000;
+  }
+  
+  /* Loading overlay */
+  #loadingOverlay {
+    transition: all 0.3s ease;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .fc-header-toolbar {
+      flex-direction: column;
+    }
+    
+    .fc-toolbar-chunk {
+      margin-bottom: 0.5rem;
+    }
+  }
