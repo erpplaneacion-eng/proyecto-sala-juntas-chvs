@@ -1,19 +1,21 @@
 :root {
-    --emerald: #50C878;
-    --emerald-dark: #38a15b;
-    --emerald-light: #d1f2eb;
+    --emerald: #10b981;
+    --emerald-dark: #059669;
+    --emerald-light: #ecfdf5;
     --white: #ffffff;
-    --gray-bg: #f8f9fa;
+    --gray-bg: #f3f4f6;
+    --shadow-main: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'Montserrat', sans-serif;
     background-color: var(--gray-bg);
-    color: #333;
+    color: #1f2937;
 }
 
 .chvs-header {
-    background-color: var(--emerald);
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .text-emerald {
@@ -25,28 +27,34 @@ body {
 }
 
 .btn-emerald {
-    background-color: var(--emerald);
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-dark) 100%);
     color: white;
     border: none;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-emerald:hover {
-    background-color: var(--emerald-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     color: white;
+    filter: brightness(1.1);
 }
 
 .card {
-    border-radius: 12px;
+    border-radius: 1rem;
+    border: none;
+    transition: transform 0.3s ease;
 }
 
 .room-selector .room-item {
-    background-color: white;
-    transition: transform 0.2s ease;
+    background-color: var(--white);
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
 }
 
 .room-selector .room-item:hover {
-    transform: translateX(5px);
+    transform: scale(1.02);
+    border-color: var(--emerald);
 }
 
 #calendar {
@@ -54,44 +62,61 @@ body {
     margin: 0 auto;
     background: white;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 1rem;
 }
 
-/* FullCalendar Customization */
-.fc-event {
-    cursor: pointer;
-    border: none !important;
-    padding: 2px 4px;
-}
-
-.fc-header-toolbar {
-    margin-bottom: 1.5em !important;
-    flex-wrap: wrap;
-    gap: 10px;
+/* FullCalendar Professional Look */
+.fc {
+    --fc-border-color: #e5e7eb;
+    --fc-button-text-color: #ffffff;
+    --fc-button-bg-color: #10b981;
+    --fc-button-border-color: #10b981;
+    --fc-button-hover-bg-color: #059669;
+    --fc-button-hover-border-color: #059669;
+    --fc-button-active-bg-color: #047857;
+    --fc-button-active-border-color: #047857;
+    --fc-today-bg-color: rgba(16, 185, 129, 0.05);
 }
 
 .fc-toolbar-title {
-    font-size: 1.25rem !important;
-    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    color: #111827;
 }
 
-.fc-button-primary {
-    background-color: var(--emerald) !important;
-    border-color: var(--emerald) !important;
+.fc-event {
+    border-radius: 6px !important;
+    padding: 3px 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.fc-button-primary:hover {
-    background-color: var(--emerald-dark) !important;
+/* Form Modernization */
+.form-control, .form-select {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
 }
 
-.fc-button-active {
-    background-color: var(--emerald-dark) !important;
-}
-
-/* Form Styles */
 .form-control:focus, .form-select:focus {
+    background-color: white !important;
     border-color: var(--emerald);
-    box-shadow: 0 0 0 0.25rem rgba(80, 200, 120, 0.25);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Modal Customization */
+.modal-content {
+    background-color: var(--white);
+}
+
+.shadow-2xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Animations */
+.transition-all {
+    transition: all 0.3s ease;
 }
 
 /* Responsive adjustments */
@@ -99,9 +124,10 @@ body {
     .fc-header-toolbar {
         flex-direction: column;
         align-items: center;
+        gap: 0.5rem;
     }
     
-    .chvs-header h1 {
-        font-size: 1rem;
+    .fc-toolbar-title {
+        font-size: 1.1rem !important;
     }
 }

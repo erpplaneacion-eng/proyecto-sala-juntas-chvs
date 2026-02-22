@@ -42,11 +42,19 @@ document.addEventListener('DOMContentLoaded', async function() {
             right: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         locale: 'es',
-        slotMinTime: '05:00:00',
-        slotMaxTime: '22:00:00',
+        slotMinTime: '07:00:00',
+        slotMaxTime: '17:00:00',
         events: initialEvents,
         allDaySlot: false,
+        expandRows: true,
         height: 'auto',
+        nowIndicator: true,
+        eventMouseEnter: function(info) {
+            info.el.style.opacity = '0.8';
+        },
+        eventMouseLeave: function(info) {
+            info.el.style.opacity = '1';
+        },
         eventClick: function(info) {
             alert(`Reserva de: ${info.event.extendedProps.user}
 Área: ${info.event.extendedProps.area}

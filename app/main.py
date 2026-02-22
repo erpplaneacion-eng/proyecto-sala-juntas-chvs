@@ -61,11 +61,11 @@ def create_booking(
     start_obj = time.fromisoformat(start_time)
     end_obj = time.fromisoformat(end_time)
 
-    # Validar horario (5am a 10pm)
-    min_time = time(5, 0)
-    max_time = time(22, 0)
+    # Validar horario (7am a 5pm)
+    min_time = time(7, 0)
+    max_time = time(17, 0)
     if start_obj < min_time or end_obj > max_time or start_obj >= end_obj:
-        raise HTTPException(status_code=400, detail="Horario fuera del rango permitido (5:00 AM - 10:00 PM)")
+        raise HTTPException(status_code=400, detail="Horario fuera del rango permitido (7:00 AM - 5:00 PM)")
 
     # Validar solapamiento
     existing_booking = db.query(models.Booking).filter(
