@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: window.innerWidth < 768 ? 'timeGridDay' : 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         locale: 'es',
         slotMinTime: '07:00:00',
@@ -70,10 +70,10 @@ Horario: ${info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-d
             bookingModal.show();
         },
         windowResize: function(view) {
-            if (window.innerWidth < 768) {
-                calendar.changeView('timeGridDay');
-            } else {
-                calendar.changeView('timeGridWeek');
+            // Optional: Adjust view on resize only if extremely narrow, otherwise respect user choice
+            if (window.innerWidth < 768 && view.type === 'timeGridWeek') {
+                 // Keep user choice or adapt? Let's just let FullCalendar handle layout.
+                 // We remove the forced change to allow user freedom.
             }
         }
     });
