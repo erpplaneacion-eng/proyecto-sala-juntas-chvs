@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin — CHVS Salas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --emerald-50:  #ecfdf5;
+            --gray-50:     #f9fafb;
+            --gray-100:    #f3f4f6;
+            --gray-200:    #e5e7eb;
+            --gray-600:    #4b5563;
+            --gray-800:    #1f2937;
+            --red-100:     #fee2e2;
+            --red-600:     #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-50);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.12);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 36px 32px 28px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .login-header .icon {
+            width: 56px; height: 56px;
+            background: rgba(255,255,255,.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 26px;
+        }
+
+        .login-header h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+        .login-header p  { font-size: .875rem; opacity: .85; }
+
+        .login-body { padding: 32px; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+        .form-group input {
+            width: 100%; padding: 11px 14px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: .95rem;
+            font-family: inherit;
+            transition: border-color .2s, box-shadow .2s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: var(--emerald-600);
+            box-shadow: 0 0 0 3px rgba(5,150,105,.15);
+        }
+
+        .error-box {
+            background: var(--red-100);
+            color: var(--red-600);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: .875rem;
+            margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .btn-login {
+            width: 100%; padding: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+        }
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(5,150,105,.35);
+        }
+        .btn-login:active { transform: translateY(0); }
+
+        .back-link {
+            display: block; text-align: center; margin-top: 20px;
+            font-size: .85rem; color: var(--gray-600);
+            text-decoration: none;
+        }
+        .back-link:hover { color: var(--emerald-600); }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="icon">🔐</div>
+            <h1>Panel de Administración</h1>
+            <p>Corporación Hacia un Valle Solidario</p>
+        </div>
+        <div class="login-body">
+            {% if error %}
+            <div class="error-box">⚠️ {{ error }}</div>
+            {% endif %}
+            <form method="POST" action="/admin/login">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input id="username" name="username" type="text"
+                           placeholder="Ingresa tu usuario" required autofocus/>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input id="password" name="password" type="password"
+                           placeholder="••••••••••" required/>
+                </div>
+                <button class="btn-login" type="submit">Iniciar sesión</button>
+            </form>
+            <a class="back-link" href="/">← Volver al calendario</a>
+        </div>
+    </div>
+</body>
+</html>

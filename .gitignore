@@ -9,3 +9,8 @@ __pycache__/
 .idea/
 *.log
 *.egg-info/
+credentials.json
+app/credentials.json
+app/get_token.py
+test_email.py
+dev.db

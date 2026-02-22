@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }} — CHVS Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --emerald-50: #ecfdf5;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --red-100: #fee2e2;
+            --red-600: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-100);
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 60px;
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+        }
+
+        .topbar-left .logo {
+            font-size: 1.4rem;
+        }
+
+        .topbar-left h1 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-badge {
+            background: rgba(255, 255, 255, .2);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: .8rem;
+            font-weight: 500;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, .15);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .3);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: .8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, .25);
+        }
+
+        /* Layout */
+        .main {
+            padding: 80px 24px 40px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 24px;
+        }
+
+        /* Form card */
+        .form-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .08);
+            overflow: hidden;
+        }
+
+        .form-card-header {
+            background: var(--emerald-50);
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            font-weight: 600;
+            color: var(--emerald-700);
+            font-size: .95rem;
+        }
+
+        .form-body {
+            padding: 28px 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 560px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 13px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: .95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--emerald-600);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, .15);
+        }
+
+        .error-box {
+            background: var(--red-100);
+            color: var(--red-600);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: .875rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .btn-cancel {
+            padding: 10px 22px;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: none;
+            border-radius: 8px;
+            font-size: .9rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-save {
+            padding: 10px 28px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: .9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s, box-shadow .15s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(5, 150, 105, .4);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="topbar">
+        <div class="topbar-left">
+            <span class="logo">🏢</span>
+            <div>
+                <h1>CHVS — Panel Admin</h1>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <span class="admin-badge">👤 {{ admin_user }}</span>
+            <a class="btn-back" href="/admin">← Volver al dashboard</a>
+        </div>
+    </nav>
+
+    <div class="main">
+        <h2 class="page-title">
+            {% if booking %}✏️ Editar Reserva #{{ booking.id }}{% else %}+ Nueva Reserva{% endif %}
+        </h2>
+
+        <div class="form-card">
+            <div class="form-card-header">
+                {% if booking %}Modifica los datos de la reserva{% else %}Completa los datos de la nueva reserva{% endif
+                %}
+            </div>
+            <div class="form-body">
+                {% if error %}
+                <div class="error-box">⚠️ {{ error }}</div>
+                {% endif %}
+
+                <form method="POST" action="{{ action }}">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="user_name">Nombre del responsable</label>
+                            <input id="user_name" name="user_name" type="text" required
+                                value="{{ booking.user_name if booking else '' }}" placeholder="Ej: María Rodríguez" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user_email">Correo electrónico</label>
+                            <input id="user_email" name="user_email" type="email" required
+                                value="{{ booking.user_email if booking else '' }}"
+                                placeholder="correo@vallesolidario.com" />
+                        </div>
+                        <div class="form-group full">
+                            <label for="area">Área / Dependencia</label>
+                            <input id="area" name="area" type="text" required
+                                value="{{ booking.area if booking else '' }}" placeholder="Ej: Recursos Humanos" />
+                        </div>
+                        <div class="form-group">
+                            <label for="room_id">Sala</label>
+                            <select id="room_id" name="room_id" required>
+                                {% for room in rooms %}
+                                <option value="{{ room.id }}" {% if booking and booking.room_id==room.id %}selected{%
+                                    endif %}>
+                                    {{ room.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking_date">Fecha</label>
+                            <input id="booking_date" name="booking_date" type="date" required
+                                value="{{ booking.date.isoformat() if booking else '' }}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="start_time">Hora de inicio</label>
+                            <input id="start_time" name="start_time" type="time" min="07:00" max="17:00" required
+                                value="{{ booking.start_time.strftime('%H:%M') if booking else '08:00' }}" />
+                        </div>
+                        <div class="form-group">
+                            <label for="end_time">Hora de fin</label>
+                            <input id="end_time" name="end_time" type="time" min="07:00" max="17:00" required
+                                value="{{ booking.end_time.strftime('%H:%M') if booking else '09:00' }}" />
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="btn-cancel" href="/admin">Cancelar</a>
+                        <button class="btn-save" type="submit">
+                            {% if booking %}💾 Guardar cambios{% else %}✅ Crear reserva{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

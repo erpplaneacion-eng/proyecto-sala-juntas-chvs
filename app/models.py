@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Date, Time, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from .database.db import Base
 import datetime
@@ -27,3 +27,13 @@ class Booking(Base):
     
     room_id = Column(Integer, ForeignKey("rooms.id"))
     room = relationship("Room", back_populates="bookings")
+
+
+class AdminUser(Base):
+    __tablename__ = "admin_users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

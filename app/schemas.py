@@ -29,3 +29,13 @@ class Booking(BookingBase):
     created_at: datetime
     class Config:
         from_attributes = True
+
+class BookingUpdate(BaseModel):
+    """Schema para edición parcial de reservas por el administrador."""
+    user_name: Optional[str] = None
+    user_email: Optional[str] = None
+    area: Optional[str] = None
+    date: Optional[date] = None
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
+    room_id: Optional[int] = None
