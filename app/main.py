@@ -14,15 +14,21 @@ from .database.db import Base, engine, get_db
 
 load_environment()
 
-# Configuracion de correo
+# Configuracion de correo — los valores se leen del .env para que local y Railway
+# puedan usar configuraciones distintas (587/STARTTLS vs 465/SSL).
+def _str_to_bool(value: str | None, default: bool = False) -> bool:
+    if value is None:
+        return default
+    return value.strip().lower() in ("true", "1", "yes")
+
 mail_conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
     MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
     MAIL_FROM=os.getenv("MAIL_FROM", os.getenv("MAIL_USERNAME")),
-    MAIL_PORT=587,
-    MAIL_SERVER="smtp.gmail.com",
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
+    MAIL_PORT=int(os.getenv("MAIL_PORT", "587")),
+    MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.gmail.com"),
+    MAIL_STARTTLS=_str_to_bool(os.getenv("MAIL_STARTTLS"), default=True),
+    MAIL_SSL_TLS=_str_to_bool(os.getenv("MAIL_SSL_TLS"), default=False),
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,
     TEMPLATE_FOLDER="app/templates",
@@ -32,14 +38,25 @@ fastmail = FastMail(mail_conf)
 
 
 async def send_booking_email(booking_data: dict, email_to: str):
-    """Send booking confirmation email in background."""
-    message = MessageSchema(
-        subject=f"Confirmacion de Reserva: {booking_data['room_name']}",
-        recipients=[email_to],
-        template_body=booking_data,
-        subtype=MessageType.html,
-    )
-    await fastmail.send_message(message, template_name="email_booking.html")
+    """Send booking confirmation email in background.
+    
+    Respeta la variable MAIL_ENABLED del entorno: si es False, no envía nada.
+    """
+    if not _str_to_bool(os.getenv("MAIL_ENABLED"), default=False):
+        print("[INFO] Envío de correo deshabilitado (MAIL_ENABLED=False). Se omite el correo.")
+        return
+
+    try:
+        message = MessageSchema(
+            subject=f"Confirmacion de Reserva: {booking_data['room_name']}",
+            recipients=[email_to],
+            template_body=booking_data,
+            subtype=MessageType.html,
+        )
+        await fastmail.send_message(message, template_name="email_booking.html")
+        print(f"[INFO] Correo de confirmación enviado a {email_to}")
+    except Exception as e:
+        print(f"[ERROR] No se pudo enviar el correo a {email_to}: {e}")
 
 
 app = FastAPI(title="CHVS - Sala de Juntas")
