@@ -1,0 +1,31 @@
+from pydantic import BaseModel, EmailStr
+from datetime import date, time, datetime
+from typing import Optional, List
+
+class RoomBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    color: str
+
+class Room(RoomBase):
+    id: int
+    class Config:
+        from_attributes = True
+
+class BookingBase(BaseModel):
+    user_name: str
+    user_email: str
+    area: str
+    date: date
+    start_time: time
+    end_time: time
+    room_id: int
+
+class BookingCreate(BookingBase):
+    pass
+
+class Booking(BookingBase):
+    id: int
+    created_at: datetime
+    class Config:
+        from_attributes = True

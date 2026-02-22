@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Salas - CHVS</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- FullCalendar CSS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    <!-- Bootstrap CSS for Modals and Layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="navbar sticky-top flex-md-nowrap p-0 shadow-sm chvs-header">
+        <div class="container d-flex align-items-center justify-content-between p-3">
+            <h1 class="h4 mb-0 text-white font-weight-bold">CORPORACION HACIA UN VALLE SOLIDARIO (CHVS)</h1>
+            <span class="text-white d-none d-md-inline">Reserva de Salas de Juntas</span>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4 mb-5">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="card shadow-sm border-0 room-selector">
+                    <div class="card-body">
+                        <h5 class="card-title text-emerald mb-3">Salas Disponibles</h5>
+                        {% for room in rooms %}
+                        <div class="room-item mb-2 p-2 rounded" style="border-left: 5px solid {{ room.color }}">
+                            <strong>{{ room.name }}</strong><br>
+                            <small class="text-muted">{{ room.description }}</small>
+                        </div>
+                        {% endfor %}
+                        <button class="btn btn-emerald w-100 mt-4" data-bs-toggle="modal" data-bs-target="#bookingModal">Nueva Reserva</button>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm border-0 mt-3 info-card">
+                    <div class="card-body">
+                        <h6 class="text-muted">Horario de Atención</h6>
+                        <p class="mb-0"><strong>5:00 AM - 10:00 PM</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="card shadow-sm border-0 calendar-card">
+                    <div class="card-body">
+                        <div id='calendar'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-emerald text-white">
+                    <h5 class="modal-title" id="bookingModalLabel">Formulario de Reserva</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label for="user_name" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="user_name" name="user_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="user_email" class="form-label">Correo Corporativo</label>
+                            <input type="email" class="form-control" id="user_email" name="user_email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="area" class="form-label">Área/Departamento</label>
+                            <select class="form-select" id="area" name="area" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <option value="Administración">Administración</option>
+                                <option value="Proyectos">Proyectos</option>
+                                <option value="Social">Social</option>
+                                <option value="Operaciones">Operaciones</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="room_id" class="form-label">Sala de Juntas</label>
+                            <select class="form-select" id="room_id" name="room_id" required>
+                                {% for room in rooms %}
+                                <option value="{{ room.id }}">{{ room.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="booking_date" class="form-label">Día</label>
+                                <input type="date" class="form-control" id="booking_date" name="booking_date" required min="{{ now }}">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="start_time" class="form-label">Inicio (5:00 - 22:00)</label>
+                                <input type="time" class="form-control" id="start_time" name="start_time" required min="05:00" max="22:00">
+                            </div>
+                            <div class="col">
+                                <label for="end_time" class="form-label">Fin</label>
+                                <input type="time" class="form-control" id="end_time" name="end_time" required min="05:00" max="22:00">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-emerald w-100">Confirmar Reserva</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/calendar.js"></script>
+</body>
+</html>

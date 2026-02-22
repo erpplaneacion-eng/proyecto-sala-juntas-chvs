@@ -1,0 +1,107 @@
+:root {
+    --emerald: #50C878;
+    --emerald-dark: #38a15b;
+    --emerald-light: #d1f2eb;
+    --white: #ffffff;
+    --gray-bg: #f8f9fa;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--gray-bg);
+    color: #333;
+}
+
+.chvs-header {
+    background-color: var(--emerald);
+}
+
+.text-emerald {
+    color: var(--emerald) !important;
+}
+
+.bg-emerald {
+    background-color: var(--emerald) !important;
+}
+
+.btn-emerald {
+    background-color: var(--emerald);
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-emerald:hover {
+    background-color: var(--emerald-dark);
+    color: white;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+.room-selector .room-item {
+    background-color: white;
+    transition: transform 0.2s ease;
+}
+
+.room-selector .room-item:hover {
+    transform: translateX(5px);
+}
+
+#calendar {
+    max-width: 100%;
+    margin: 0 auto;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* FullCalendar Customization */
+.fc-event {
+    cursor: pointer;
+    border: none !important;
+    padding: 2px 4px;
+}
+
+.fc-header-toolbar {
+    margin-bottom: 1.5em !important;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.fc-toolbar-title {
+    font-size: 1.25rem !important;
+    font-weight: 600;
+}
+
+.fc-button-primary {
+    background-color: var(--emerald) !important;
+    border-color: var(--emerald) !important;
+}
+
+.fc-button-primary:hover {
+    background-color: var(--emerald-dark) !important;
+}
+
+.fc-button-active {
+    background-color: var(--emerald-dark) !important;
+}
+
+/* Form Styles */
+.form-control:focus, .form-select:focus {
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 0.25rem rgba(80, 200, 120, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .fc-header-toolbar {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .chvs-header h1 {
+        font-size: 1rem;
+    }
+}
