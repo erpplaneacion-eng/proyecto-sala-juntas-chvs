@@ -9,8 +9,31 @@
 
 body {
     font-family: 'Poppins', 'Montserrat', sans-serif;
-    background-color: var(--gray-bg);
     color: #1f2937;
+    background-color: #0d2b1e !important;
+    background-image: url('/static/img/bg_sala_juntas.jpg') !important;
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(5, 46, 22, 0.55) 0%,
+            rgba(5, 46, 22, 0.40) 50%,
+            rgba(5, 46, 22, 0.55) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+body>* {
+    position: relative;
+    z-index: 1;
 }
 
 .chvs-header {
@@ -88,18 +111,20 @@ body {
     padding: 3px 6px !important;
     font-size: 0.85rem !important;
     font-weight: 500 !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Form Modernization */
-.form-control, .form-select {
+.form-control,
+.form-select {
     padding: 0.75rem 1rem;
     border-radius: 0.75rem;
     border: 2px solid transparent;
     transition: all 0.2s ease;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     background-color: white !important;
     border-color: var(--emerald);
     box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
@@ -126,7 +151,7 @@ body {
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .fc-toolbar-title {
         font-size: 1.1rem !important;
     }
