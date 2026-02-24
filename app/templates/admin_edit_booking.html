@@ -18,9 +18,9 @@
         }
 
         :root {
-            --emerald-600: #059669;
-            --emerald-700: #047857;
-            --emerald-50: #ecfdf5;
+            --emerald-600: #62B33E;
+            --emerald-700: #4d9030;
+            --emerald-50: #f0f8eb;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -219,7 +219,7 @@
 
         .btn-save {
             padding: 10px 28px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #62B33E 0%, #4d9030 100%);
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -231,7 +231,7 @@
 
         .btn-save:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(5, 150, 105, .4);
+            box-shadow: 0 4px 14px rgba(98, 179, 62, .4);
         }
     </style>
 </head>
@@ -287,12 +287,17 @@
                             <label for="room_id">Sala</label>
                             <select id="room_id" name="room_id" required>
                                 {% for room in rooms %}
-                                <option value="{{ room.id }}" {% if booking and booking.room_id==room.id %}selected{%
-                                    endif %}>
-                                    {{ room.name }}
+                                <option value="{{ room.id }}" data-capacity="{{ room.capacity or 99 }}"
+                                    {% if booking and booking.room_id==room.id %}selected{% endif %}>
+                                    {{ room.name }}{% if room.capacity %} (máx. {{ room.capacity }}){% endif %}
                                 </option>
                                 {% endfor %}
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendees">N.° de asistentes</label>
+                            <input id="attendees" name="attendees" type="number" min="1"
+                                value="{{ booking.attendees if booking and booking.attendees else 1 }}" required />
                         </div>
                         <div class="form-group">
                             <label for="booking_date">Fecha</label>

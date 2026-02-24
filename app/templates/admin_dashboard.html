@@ -18,9 +18,9 @@
         }
 
         :root {
-            --emerald-600: #059669;
-            --emerald-700: #047857;
-            --emerald-50: #ecfdf5;
+            --emerald-600: #62B33E;
+            --emerald-700: #4d9030;
+            --emerald-50: #f0f8eb;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -50,7 +50,7 @@
             right: 0;
             z-index: 100;
             height: 60px;
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            background: linear-gradient(135deg, #62B33E 0%, #4d9030 100%);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -259,7 +259,7 @@
 
         .btn-new:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(5, 150, 105, .4);
+            box-shadow: 0 4px 14px rgba(98, 179, 62, .4);
         }
 
         /* ---- Table ---- */
@@ -511,6 +511,7 @@
                             <th>Correo</th>
                             <th>Área</th>
                             <th>Sala</th>
+                            <th>Asistentes</th>
                             <th>Fecha</th>
                             <th>Horario</th>
                             <th>Creado</th>
@@ -530,6 +531,7 @@
                                     {{ b.room.name }}
                                 </span>
                             </td>
+                            <td style="text-align:center;">{{ b.attendees or '—' }}</td>
                             <td>{{ b.date.strftime('%d/%m/%Y') }}</td>
                             <td>{{ b.start_time.strftime('%H:%M') }} – {{ b.end_time.strftime('%H:%M') }}</td>
                             <td style="color:var(--gray-400); font-size:.8rem;">{{ b.created_at.strftime('%d/%m/%Y') }}
@@ -547,7 +549,7 @@
                         {% endfor %}
                         {% else %}
                         <tr class="empty-row">
-                            <td colspan="9">No hay reservas que mostrar.</td>
+                            <td colspan="10">No hay reservas que mostrar.</td>
                         </tr>
                         {% endif %}
                     </tbody>

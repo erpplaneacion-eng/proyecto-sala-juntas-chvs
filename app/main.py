@@ -1,6 +1,7 @@
-from datetime import date, time
+from datetime import date, datetime, time, timedelta
 import base64
 import os
+import secrets
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
@@ -14,6 +15,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from jinja2 import Environment, FileSystemLoader
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -110,6 +112,19 @@ def startup_db_seed():
     db_gen = get_db()
     db = next(db_gen)
     try:
+        # Migraciones para columnas nuevas (seguro si ya existen)
+        for sql in [
+            "ALTER TABLE rooms ADD COLUMN capacity INTEGER DEFAULT 10",
+            "ALTER TABLE bookings ADD COLUMN attendees INTEGER DEFAULT 1",
+            "ALTER TABLE bookings ADD COLUMN cancel_token VARCHAR(64)",
+            "ALTER TABLE bookings ADD COLUMN cancel_token_expires_at TIMESTAMP",
+        ]:
+            try:
+                db.execute(text(sql))
+                db.commit()
+            except Exception:
+                db.rollback()
+
         # Seed de salas
         if db.query(models.Room).count() == 0:
             rooms = [
@@ -117,15 +132,25 @@ def startup_db_seed():
                     name="Sala Amarilla",
                     description="Conexion a Internet disponible",
                     color="#FFD700",
+                    capacity=12,
                 ),
                 models.Room(
                     name="Sala Morada",
                     description="Espacio tranquilo para reuniones",
                     color="#800080",
+                    capacity=8,
                 ),
             ]
             db.add_all(rooms)
             db.commit()
+        else:
+            # Actualizar capacidades de salas existentes
+            try:
+                db.execute(text("UPDATE rooms SET capacity = 12 WHERE name = 'Sala Amarilla'"))
+                db.execute(text("UPDATE rooms SET capacity = 8 WHERE name = 'Sala Morada'"))
+                db.commit()
+            except Exception:
+                db.rollback()
 
         # Seed del administrador
         admin_username = os.getenv("ADMIN_USERNAME", "admin")
@@ -167,6 +192,7 @@ def get_rooms(db: Session = Depends(get_db)):
 
 @app.post("/api/bookings")
 async def create_booking(
+    request: Request,
     background_tasks: BackgroundTasks,
     user_name: str = Form(...),
     user_email: str = Form(...),
@@ -175,6 +201,7 @@ async def create_booking(
     start_time: str = Form(...),
     end_time: str = Form(...),
     room_id: int = Form(...),
+    attendees: int = Form(...),
     db: Session = Depends(get_db),
 ):
     # Convertir strings a objetos date/time
@@ -195,6 +222,13 @@ async def create_booking(
     if room is None:
         raise HTTPException(status_code=404, detail="La sala seleccionada no existe.")
 
+    # Validar capacidad
+    if attendees < 1 or (room.capacity and attendees > room.capacity):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Número de asistentes inválido. La sala tiene capacidad para {room.capacity} personas.",
+        )
+
     # Validar solapamiento
     existing_booking = (
         db.query(models.Booking)
@@ -212,6 +246,9 @@ async def create_booking(
             status_code=400, detail="La sala ya esta reservada en este horario."
         )
 
+    cancel_token = secrets.token_urlsafe(32)
+    cancel_token_expires_at = datetime.utcnow() + timedelta(hours=48)
+
     new_booking = models.Booking(
         user_name=user_name,
         user_email=user_email,
@@ -220,11 +257,15 @@ async def create_booking(
         start_time=start_obj,
         end_time=end_obj,
         room_id=room_id,
+        attendees=attendees,
+        cancel_token=cancel_token,
+        cancel_token_expires_at=cancel_token_expires_at,
     )
     db.add(new_booking)
     db.commit()
     db.refresh(new_booking)
 
+    base_url = str(request.base_url).rstrip("/")
     email_data = {
         "user_name": user_name,
         "room_name": room.name,
@@ -232,6 +273,8 @@ async def create_booking(
         "start_time": start_time,
         "end_time": end_time,
         "area": area,
+        "attendees": attendees,
+        "cancel_url": f"{base_url}/cancelar/{cancel_token}",
     }
     background_tasks.add_task(send_booking_email, email_data, user_email)
 
@@ -346,6 +389,7 @@ def admin_create_booking(
     start_time: str = Form(...),
     end_time: str = Form(...),
     room_id: int = Form(...),
+    attendees: int = Form(...),
     db: Session = Depends(get_db),
     current_admin: str = Depends(get_current_admin),
 ):
@@ -372,6 +416,23 @@ def admin_create_booking(
         )
 
     room = db.query(models.Room).filter(models.Room.id == room_id).first()
+
+    if room and attendees > (room.capacity or 9999):
+        rooms = db.query(models.Room).all()
+        return templates.TemplateResponse(
+            "admin_edit_booking.html",
+            {
+                "request": request,
+                "booking": None,
+                "rooms": rooms,
+                "admin_user": current_admin,
+                "action": "/admin/bookings/new",
+                "title": "Nueva Reserva",
+                "error": f"Número de asistentes supera la capacidad de la sala ({room.capacity} personas).",
+            },
+            status_code=400,
+        )
+
     existing = (
         db.query(models.Booking)
         .filter(
@@ -398,6 +459,9 @@ def admin_create_booking(
             status_code=400,
         )
 
+    cancel_token = secrets.token_urlsafe(32)
+    cancel_token_expires_at = datetime.utcnow() + timedelta(hours=48)
+
     new_booking = models.Booking(
         user_name=user_name,
         user_email=user_email,
@@ -406,10 +470,14 @@ def admin_create_booking(
         start_time=start_obj,
         end_time=end_obj,
         room_id=room_id,
+        attendees=attendees,
+        cancel_token=cancel_token,
+        cancel_token_expires_at=cancel_token_expires_at,
     )
     db.add(new_booking)
     db.commit()
 
+    base_url = str(request.base_url).rstrip("/")
     email_data = {
         "user_name": user_name,
         "room_name": room.name if room else "Sala",
@@ -417,6 +485,8 @@ def admin_create_booking(
         "start_time": start_time,
         "end_time": end_time,
         "area": area,
+        "attendees": attendees,
+        "cancel_url": f"{base_url}/cancelar/{cancel_token}",
     }
     background_tasks.add_task(send_booking_email, email_data, user_email)
 
@@ -459,6 +529,7 @@ def admin_update_booking(
     start_time: str = Form(...),
     end_time: str = Form(...),
     room_id: int = Form(...),
+    attendees: int = Form(...),
     db: Session = Depends(get_db),
     current_admin: str = Depends(get_current_admin),
 ):
@@ -484,6 +555,23 @@ def admin_update_booking(
                 "action": f"/admin/bookings/{booking_id}/edit",
                 "title": "Editar Reserva",
                 "error": "Horario fuera del rango permitido (7:00 AM - 5:00 PM).",
+            },
+            status_code=400,
+        )
+
+    room = db.query(models.Room).filter(models.Room.id == room_id).first()
+    if room and attendees > (room.capacity or 9999):
+        rooms = db.query(models.Room).all()
+        return templates.TemplateResponse(
+            "admin_edit_booking.html",
+            {
+                "request": request,
+                "booking": booking,
+                "rooms": rooms,
+                "admin_user": current_admin,
+                "action": f"/admin/bookings/{booking_id}/edit",
+                "title": "Editar Reserva",
+                "error": f"Número de asistentes supera la capacidad de la sala ({room.capacity} personas).",
             },
             status_code=400,
         )
@@ -523,6 +611,7 @@ def admin_update_booking(
     booking.start_time = start_obj
     booking.end_time = end_obj
     booking.room_id = room_id
+    booking.attendees = attendees
     db.commit()
 
     return RedirectResponse(url="/admin", status_code=302)
@@ -540,3 +629,54 @@ def admin_delete_booking(
     db.delete(booking)
     db.commit()
     return RedirectResponse(url="/admin", status_code=302)
+
+
+# ---------------------------------------------------------------------------
+# Cancelación de reserva por el usuario (enlace en el email)
+# ---------------------------------------------------------------------------
+
+@app.get("/cancelar/{token}")
+def cancel_booking_form(token: str, request: Request, db: Session = Depends(get_db)):
+    booking = db.query(models.Booking).filter(models.Booking.cancel_token == token).first()
+
+    if not booking:
+        return templates.TemplateResponse(
+            "cancel_result.html",
+            {"request": request, "success": False, "error": "Reserva no encontrada o ya fue cancelada."},
+        )
+
+    if booking.cancel_token_expires_at and datetime.utcnow() > booking.cancel_token_expires_at:
+        return templates.TemplateResponse(
+            "cancel_result.html",
+            {"request": request, "success": False, "error": "El enlace de cancelación ha expirado (válido por 48 horas)."},
+        )
+
+    return templates.TemplateResponse(
+        "cancel_confirm.html",
+        {"request": request, "booking": booking, "token": token},
+    )
+
+
+@app.post("/cancelar/{token}")
+def cancel_booking_confirm(token: str, request: Request, db: Session = Depends(get_db)):
+    booking = db.query(models.Booking).filter(models.Booking.cancel_token == token).first()
+
+    if not booking:
+        return templates.TemplateResponse(
+            "cancel_result.html",
+            {"request": request, "success": False, "error": "Reserva no encontrada o ya fue cancelada."},
+        )
+
+    if booking.cancel_token_expires_at and datetime.utcnow() > booking.cancel_token_expires_at:
+        return templates.TemplateResponse(
+            "cancel_result.html",
+            {"request": request, "success": False, "error": "El enlace de cancelación ha expirado."},
+        )
+
+    db.delete(booking)
+    db.commit()
+
+    return templates.TemplateResponse(
+        "cancel_result.html",
+        {"request": request, "success": True, "error": None},
+    )

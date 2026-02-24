@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if success %}Reserva Cancelada{% else %}Error{% endif %} — CHVS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 48px 36px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+        }
+        .icon { font-size: 3.5rem; margin-bottom: 20px; }
+        h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 10px; }
+        .message { font-size: .9rem; color: #6b7280; margin-bottom: 32px; line-height: 1.6; }
+        .h1-success { color: #2d6e14; }
+        .h1-error { color: #c53030; }
+        .btn-home {
+            display: inline-block;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #62B33E 0%, #4d9030 100%);
+            color: #fff;
+            border-radius: 9px;
+            font-size: .95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: filter .2s;
+        }
+        .btn-home:hover { filter: brightness(1.1); }
+        .chvs-logo { margin-top: 28px; font-size: .8rem; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        {% if success %}
+            <div class="icon">✅</div>
+            <h1 class="h1-success">Reserva cancelada</h1>
+            <p class="message">Tu reserva ha sido eliminada correctamente. Si necesitas volver a reservar, puedes hacerlo desde la página principal.</p>
+        {% else %}
+            <div class="icon">❌</div>
+            <h1 class="h1-error">No se pudo cancelar</h1>
+            <p class="message">{{ error }}</p>
+        {% endif %}
+
+        <a href="/" class="btn-home">Ir al inicio</a>
+        <p class="chvs-logo">CORPORACIÓN HACIA UN VALLE SOLIDARIO</p>
+    </div>
+</body>
+</html>

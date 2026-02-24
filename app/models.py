@@ -10,6 +10,7 @@ class Room(Base):
     name = Column(String, unique=True, index=True)
     description = Column(String, nullable=True)
     color = Column(String)  # Para identificar visualmente en el calendario
+    capacity = Column(Integer, default=10, nullable=True)  # Capacidad máxima de personas
 
     bookings = relationship("Booking", back_populates="room")
 
@@ -23,8 +24,11 @@ class Booking(Base):
     date = Column(Date, index=True)
     start_time = Column(Time)
     end_time = Column(Time)
+    attendees = Column(Integer, default=1, nullable=True)  # Número de asistentes
+    cancel_token = Column(String(64), unique=True, nullable=True, index=True)
+    cancel_token_expires_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    
+
     room_id = Column(Integer, ForeignKey("rooms.id"))
     room = relationship("Room", back_populates="bookings")
 

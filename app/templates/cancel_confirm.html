@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancelar Reserva — CHVS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 40px 36px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+        .icon { font-size: 3rem; margin-bottom: 16px; }
+        h1 { font-size: 1.4rem; font-weight: 700; color: #1f2937; margin-bottom: 8px; }
+        .subtitle { font-size: .9rem; color: #6b7280; margin-bottom: 28px; }
+        .details {
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 18px 20px;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 7px 0;
+            font-size: .875rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: #6b7280; font-weight: 500; }
+        .detail-value { color: #1f2937; font-weight: 600; }
+        .btn-cancel-confirm {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: #e53e3e;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background .2s;
+        }
+        .btn-cancel-confirm:hover { background: #c53030; }
+        .btn-keep {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            border-radius: 9px;
+            font-size: .95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .btn-keep:hover { background: #e5e7eb; }
+        .chvs-logo {
+            margin-top: 32px;
+            font-size: .8rem;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">⚠️</div>
+        <h1>¿Cancelar tu reserva?</h1>
+        <p class="subtitle">Esta acción no se puede deshacer. Revisa los detalles antes de confirmar.</p>
+
+        <div class="details">
+            <div class="detail-row">
+                <span class="detail-label">Responsable</span>
+                <span class="detail-value">{{ booking.user_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Sala</span>
+                <span class="detail-value">{{ booking.room.name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Fecha</span>
+                <span class="detail-value">{{ booking.date.strftime('%d/%m/%Y') }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Horario</span>
+                <span class="detail-value">{{ booking.start_time.strftime('%H:%M') }} – {{ booking.end_time.strftime('%H:%M') }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Área</span>
+                <span class="detail-value">{{ booking.area }}</span>
+            </div>
+            {% if booking.attendees %}
+            <div class="detail-row">
+                <span class="detail-label">Asistentes</span>
+                <span class="detail-value">{{ booking.attendees }} persona(s)</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <form method="POST" action="/cancelar/{{ token }}">
+            <button type="submit" class="btn-cancel-confirm">Sí, cancelar reserva</button>
+        </form>
+        <a href="/" class="btn-keep">No, mantener mi reserva</a>
+
+        <p class="chvs-logo">CORPORACIÓN HACIA UN VALLE SOLIDARIO</p>
+    </div>
+</body>
+</html>

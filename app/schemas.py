@@ -6,6 +6,7 @@ class RoomBase(BaseModel):
     name: str
     description: Optional[str] = None
     color: str
+    capacity: Optional[int] = None
 
 class Room(RoomBase):
     id: int
@@ -20,6 +21,7 @@ class BookingBase(BaseModel):
     start_time: time
     end_time: time
     room_id: int
+    attendees: int = 1
 
 class BookingCreate(BookingBase):
     pass
@@ -39,3 +41,4 @@ class BookingUpdate(BaseModel):
     start_time: Optional[time] = None
     end_time: Optional[time] = None
     room_id: Optional[int] = None
+    attendees: Optional[int] = None

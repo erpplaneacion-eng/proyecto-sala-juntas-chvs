@@ -1,7 +1,7 @@
 :root {
-    --emerald: #10b981;
-    --emerald-dark: #059669;
-    --emerald-light: #ecfdf5;
+    --emerald: #62B33E;
+    --emerald-dark: #4d9030;
+    --emerald-light: #f0f8eb;
     --white: #ffffff;
     --gray-bg: #f3f4f6;
     --shadow-main: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -24,9 +24,9 @@ body::before {
     position: fixed;
     inset: 0;
     background: linear-gradient(to bottom,
-            rgba(5, 46, 22, 0.55) 0%,
-            rgba(5, 46, 22, 0.40) 50%,
-            rgba(5, 46, 22, 0.55) 100%);
+            rgba(30, 65, 12, 0.55) 0%,
+            rgba(30, 65, 12, 0.40) 50%,
+            rgba(30, 65, 12, 0.55) 100%);
     z-index: 0;
     pointer-events: none;
 }
@@ -58,7 +58,7 @@ body>* {
 
 .btn-emerald:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 12px rgba(98, 179, 62, 0.35);
     color: white;
     filter: brightness(1.1);
 }
@@ -92,13 +92,13 @@ body>* {
 .fc {
     --fc-border-color: #e5e7eb;
     --fc-button-text-color: #ffffff;
-    --fc-button-bg-color: #10b981;
-    --fc-button-border-color: #10b981;
-    --fc-button-hover-bg-color: #059669;
-    --fc-button-hover-border-color: #059669;
-    --fc-button-active-bg-color: #047857;
-    --fc-button-active-border-color: #047857;
-    --fc-today-bg-color: rgba(16, 185, 129, 0.05);
+    --fc-button-bg-color: #62B33E;
+    --fc-button-border-color: #62B33E;
+    --fc-button-hover-bg-color: #4d9030;
+    --fc-button-hover-border-color: #4d9030;
+    --fc-button-active-bg-color: #3d7025;
+    --fc-button-active-border-color: #3d7025;
+    --fc-today-bg-color: rgba(98, 179, 62, 0.06);
 }
 
 .fc-toolbar-title {
@@ -127,7 +127,7 @@ body>* {
 .form-select:focus {
     background-color: white !important;
     border-color: var(--emerald);
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    box-shadow: 0 0 0 4px rgba(98, 179, 62, 0.12);
 }
 
 /* Modal Customization */

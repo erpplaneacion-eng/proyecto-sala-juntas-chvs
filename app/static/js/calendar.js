@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 user: b.user_name,
                 email: b.user_email,
                 area: b.area,
-                room: roomMap[b.room_id].name
+                room: roomMap[b.room_id].name,
+                attendees: b.attendees
             }
         }));
     }
@@ -56,10 +57,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             info.el.style.opacity = '1';
         },
         eventClick: function(info) {
-            alert(`Reserva de: ${info.event.extendedProps.user}
-Área: ${info.event.extendedProps.area}
-Sala: ${info.event.extendedProps.room}
-Horario: ${info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${info.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`);
+            const p = info.event.extendedProps;
+            const start = info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const end = info.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const attendeesLine = p.attendees ? `\nAsistentes: ${p.attendees}` : '';
+            alert(`Reserva de: ${p.user}\nÁrea: ${p.area}\nSala: ${p.room}\nHorario: ${start} - ${end}${attendeesLine}`);
         },
         dateClick: function(info) {
             // Pre-fill date when clicking a slot
