@@ -280,8 +280,19 @@
                         </div>
                         <div class="form-group full">
                             <label for="area">Área / Dependencia</label>
-                            <input id="area" name="area" type="text" required
-                                value="{{ booking.area if booking else '' }}" placeholder="Ej: Recursos Humanos" />
+                            <select id="area" name="area" required>
+                                <option value="" disabled {% if not booking %}selected{% endif %}>Seleccione área...</option>
+                                {% set areas = [
+                                    "LOGISTICA","LOGISTICA-BUGA","NUTRICION","TALENTO HUMANO",
+                                    "FACTURACION-PLANEACION","CALIDAD","CONTABILIDAD","COSTOS",
+                                    "TECNICO-CALI","ADMON","TECNICO-BUGA","JURIDICO",
+                                    "TECNICO-YUMBO","GERENCIA","COMPRAS","CALIDAD-BUGA",
+                                    "CASINO","TECNICO COMEDORES","COMUNICACIONES"
+                                ] %}
+                                {% for a in areas %}
+                                <option value="{{ a }}" {% if booking and booking.area == a %}selected{% endif %}>{{ a }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="room_id">Sala</label>
